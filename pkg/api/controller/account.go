@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"rpost-it-go/pkg/api/repo"
 	"rpost-it-go/pkg/api/service"
-	"rpost-it-go/pkg/util"
+	"rpost-it-go/pkg/util/http"
 
 	"github.com/gofiber/fiber"
 )
@@ -17,7 +17,7 @@ func (c *Account) GetById(ctx *fiber.Ctx) {
 	id := ctx.Params("id")
 	record, err := c.service.GetAccountById(id)
 	if err != nil {
-		ctx.Status(util.StatusFromError(err)).SendString(err.Error())
+		ctx.Status(http.StatusFromError(err)).SendString(err.Error())
 		return
 	}
 	ctx.Status(200).JSON(record)
@@ -42,7 +42,7 @@ func (c *Account) Create(ctx *fiber.Ctx) {
 	}
 	record, err := c.service.CreateAccount(&account)
 	if err != nil {
-		ctx.Status(util.StatusFromError(err)).SendString(err.Error())
+		ctx.Status(http.StatusFromError(err)).SendString(err.Error())
 		return
 	}
 	ctx.Status(201).JSON(record)
@@ -59,7 +59,7 @@ func (c *Account) Update(ctx *fiber.Ctx) {
 	updateAccount.ID = id
 	record, err := c.service.UpdateAccount(&updateAccount)
 	if err != nil {
-		ctx.Status(util.StatusFromError(err)).SendString(err.Error())
+		ctx.Status(http.StatusFromError(err)).SendString(err.Error())
 		return
 	}
 	ctx.Status(200).JSON(record)
@@ -69,7 +69,7 @@ func (c *Account) Delete(ctx *fiber.Ctx) {
 	id := ctx.Params("id")
 	err := c.service.DeleteAccount(id)
 	if err != nil {
-		ctx.Status(util.StatusFromError(err)).SendString(err.Error())
+		ctx.Status(http.StatusFromError(err)).SendString(err.Error())
 		return
 	}
 	deleted := fmt.Sprintf("Account %s Deleted Successfully", id)

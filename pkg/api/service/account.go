@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"rpost-it-go/pkg/api/repo"
-	"rpost-it-go/pkg/util"
+	"rpost-it-go/pkg/util/crypto"
 	"strings"
 	"time"
 	"unicode"
@@ -19,7 +19,7 @@ const (
 type Account struct {
 	repo   repo.IAccountRepo
 	er     serviceErrorTemplate
-	hasher util.Hasher // password hasher
+	hasher crypto.Hasher // password hasher
 }
 
 // isValidPassword : does checks on what we consider a good password
@@ -71,7 +71,7 @@ func (a *Account) isAccountExist(accountIdUsername string) bool {
 func (a *Account) GetByIdPublic(idHandle string) (*repo.AccountView, error) {
 	acc := a.repo.FindById(idHandle)
 	if acc == nil {
-		return nil, a.er.NotFoundResource()
+		return nil, a.er.NotFoundResourceGeneric()
 	}
 	return acc.GenerateView(), nil
 }
@@ -87,24 +87,32 @@ func (a *Account) GetByIdFuzzy(id string) *[]repo.AccountView {
 	return accounts.GenerateView()
 }
 
-func (a *Account) Create(acc *repo.Account) (*repo.AccountView, error) {
+func (a *Account) ValidateCreate(acc *repo.Account) error {
 	// guard checks
 	if a.isAccountExist(acc.ID) {
-		return nil, a.er.UserInputError("id", "this id already exists")
+		return a.er.UserInputError("id", "this id already exists")
 	}
 	err := a.isValidPassword(acc.Password)
 	if err != nil {
-		return nil, a.er.UserInputError("password", err.Error())
+		return a.er.UserInputError("password", err.Error())
 	}
 	err = a.isValidDateOfBirth(acc.DateOfBirth)
 	if err != nil {
-		return nil, a.er.UserInputError("dateOfBirth", err.Error())
+		return a.er.UserInputError("dateOfBirth", err.Error())
 	}
 	err = a.isValidEmail(acc.Email)
 	if err != nil {
-		return nil, a.er.UserInputError("email", err.Error())
+		return a.er.UserInputError("email", err.Error())
 	}
+	return nil
+}
 
+func (a *Account) Create(acc *repo.Account) (*repo.AccountView, error) {
+
+	err := a.ValidateCreate(acc)
+	if err != nil {
+		return nil, err
+	}
 	// change password to hashed one
 	acc.Password = a.hasher.HashPassword(acc.Password)
 
@@ -123,7 +131,7 @@ func (a *Account) Update(acc *repo.Account) (*repo.AccountView, error) {
 
 func (a *Account) Delete(id string) error {
 	if !a.isAccountExist(id) {
-		return a.er.NotFoundResource()
+		return a.er.NotFoundResourceGeneric()
 	}
 	err := a.repo.Delete(id)
 	if err != nil {

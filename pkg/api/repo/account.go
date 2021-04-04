@@ -23,7 +23,17 @@ type AccountView struct {
 	DateOfBirth time.Time
 }
 
+// use same table name as accounts
+func (a Account) TableName() string {
+	return "accounts"
+}
+
 type Accounts []Account
+
+// use same table name as accounts
+func (a AccountView) TableName() string {
+	return "accounts"
+}
 
 // GenerateView : generate the client safe view object for an account
 func (a *Account) GenerateView() *AccountView {

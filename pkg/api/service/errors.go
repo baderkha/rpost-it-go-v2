@@ -9,9 +9,14 @@ type serviceErrorTemplate struct {
 	model string
 }
 
-// NotFoundResource : error not found 404
-func (e *serviceErrorTemplate) NotFoundResource() error {
+// NotFoundResourceGeneric : error not found 404
+func (e *serviceErrorTemplate) NotFoundResourceGeneric() error {
 	return fmt.Errorf("404,`%s` resource was not found. Check your query", e.model)
+}
+
+// NotFoundResourceReason : error not found 404
+func (e *serviceErrorTemplate) NotFoundResourceReason(reason string) error {
+	return fmt.Errorf("404,`%s` resource was not found. Check your query. Detailed reason => %s", e.model, reason)
 }
 
 // InternalError : 500 db error

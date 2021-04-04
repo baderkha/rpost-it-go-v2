@@ -7,13 +7,17 @@ import (
 )
 
 type App struct {
-	Account Account
+	Account   Account
+	Community Community
 }
 
 func New(db *gorm.DB) App {
 	ser := service.New(db)
 	return App{
 		Account: Account{
+			service: &ser,
+		},
+		Community: Community{
 			service: &ser,
 		},
 	}

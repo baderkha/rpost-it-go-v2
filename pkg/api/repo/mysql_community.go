@@ -6,6 +6,10 @@ type MYSQLCommunityRepo struct {
 	db *gorm.DB
 }
 
+func (mcomm *MYSQLCommunityRepo) getJoined() *gorm.DB {
+	return mcomm.db.Joins("AccountOwner")
+}
+
 func NewMYSQLCommunityRepo(db *gorm.DB) *MYSQLCommunityRepo {
 	return &MYSQLCommunityRepo{
 		db: db,
@@ -14,19 +18,19 @@ func NewMYSQLCommunityRepo(db *gorm.DB) *MYSQLCommunityRepo {
 
 func (mcomm *MYSQLCommunityRepo) FindById(id string) *Community {
 	var community Community
-	mcomm.db.First(&mcomm, "id=?", id)
+	mcomm.getJoined().Where("communities.id=?", id).First(&community)
 	return &community
 }
 
 func (mcomm *MYSQLCommunityRepo) FindByLikeIdInput(input string) *[]Community {
 	var communities []Community
-	mcomm.db.Where("id like ?", input).Find(communities)
+	mcomm.getJoined().Where("communities.id like ?", "%"+input+"%").Find(&communities)
 	return &communities
 }
-func (mcomm *MYSQLCommunityRepo) FindByAccountOwnerId(accountId string) *Community {
-	var community Community
-	mcomm.db.Where("account_owner_id=?", accountId).First(community)
-	return &community
+func (mcomm *MYSQLCommunityRepo) FindByAccountOwnerId(accountId string) *[]Community {
+	var communities []Community
+	mcomm.getJoined().Where("communities.account_owner_id=?", accountId).Find(&communities)
+	return &communities
 }
 
 func (mcomm *MYSQLCommunityRepo) Create(com *Community) (*Community, error) {
