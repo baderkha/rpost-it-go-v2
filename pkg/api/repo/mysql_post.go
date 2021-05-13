@@ -1,6 +1,9 @@
 package repo
 
-import "gorm.io/gorm"
+import (
+	uuid "github.com/satori/go.uuid"
+	"gorm.io/gorm"
+)
 
 // MYSQLPostRepo : Mysql gorm implementation of the repo
 type MYSQLPostRepo struct {
@@ -38,6 +41,7 @@ func (mpr *MYSQLPostRepo) FindPostsByCommunityIdAndAccountOwner(communityId stri
 }
 
 func (mpr *MYSQLPostRepo) Create(post *Post) (*Post, bool) {
+	post.ID = uuid.NewV4().String()
 	err := mpr.db.Create(post).Error
 	return post, err == nil
 }

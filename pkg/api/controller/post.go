@@ -22,8 +22,8 @@ func (p *Post) GetById(ctx *fiber.Ctx) {
 
 func (p *Post) GetAll(ctx *fiber.Ctx) {
 	req := &service.PostRequest{
-		AccountId:   ctx.Params("id"),
-		CommunityId: ctx.Params("community-id"),
+		AccountId:   ctx.Query("account-id"),
+		CommunityId: ctx.Query("community-id"),
 	}
 
 	records, err := p.Service().GetPosts(req)
@@ -37,14 +37,14 @@ func (p *Post) GetAll(ctx *fiber.Ctx) {
 func (p *Post) Create(ctx *fiber.Ctx) {
 	var record service.PostCreateJSON
 
-	err := ctx.BodyParser(record)
+	err := ctx.BodyParser(&record)
 	if err != nil {
 		p.BodyCouldNotParse(ctx, err)
 		return
 	}
 
 	request := service.PostCreateRequest{
-		AccountId: ctx.Params("account-id"),
+		AccountId: ctx.Query("account-id"),
 		Record:    &record,
 	}
 
@@ -59,14 +59,14 @@ func (p *Post) Create(ctx *fiber.Ctx) {
 
 func (p *Post) Update(ctx *fiber.Ctx) {
 	var record service.PostUpdateJSON
-	err := ctx.BodyParser(record)
+	err := ctx.BodyParser(&record)
 	if err != nil {
 		p.BodyCouldNotParse(ctx, err)
 		return
 	}
 
 	request := &service.PostUpdateRequest{
-		AccountId: ctx.Params("account-id"),
+		AccountId: ctx.Query("account-id"),
 		PostId:    ctx.Params("id"),
 		Record:    &record,
 	}
@@ -81,7 +81,7 @@ func (p *Post) Update(ctx *fiber.Ctx) {
 func (p *Post) Delete(ctx *fiber.Ctx) {
 
 	request := &service.PostDeleteRequest{
-		AccountId: ctx.Params("account-id"),
+		AccountId: ctx.Query("account-id"),
 		PostId:    ctx.Params("id"),
 	}
 	err := p.Service().DeletePost(request)

@@ -11,6 +11,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.7.1 // indirect
 	github.com/jinzhu/copier v0.2.8
 	github.com/mingrammer/commonregex v1.0.1 // indirect
+	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/valyala/fasthttp v1.18.0 // indirect
 	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2
 	golang.org/x/sys v0.0.0-20201210223839-7e3030f88018 // indirect

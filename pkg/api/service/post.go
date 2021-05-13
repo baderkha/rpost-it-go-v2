@@ -3,6 +3,7 @@ package service
 import (
 	"rpost-it-go/pkg/api/repo"
 
+	"github.com/davecgh/go-spew/spew"
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/jinzhu/copier"
 )
@@ -34,9 +35,9 @@ type PostDeleteRequest struct {
 
 // PostCreateJSON : post creation json structure for creating a record
 type PostCreateJSON struct {
-	Text        string
-	Title       string
-	CommunityId string
+	Text        string `json:"text"`
+	Title       string `json:"title"`
+	CommunityId string `json:"communityId"`
 }
 
 // PostUpdateJSON : update allowed for Posts
@@ -80,15 +81,12 @@ func (p *Post) GetPosts(req *PostRequest) (*[]repo.Post, error) {
 	} else if req.AccountId == "" && req.CommunityId != "" {
 		return p.repo.FindPostsByCommunityId(req.CommunityId), nil
 	}
-	return nil, p.Error().CustomError(400, "Must provide either accountId or communityId or both", "")
+	return nil, p.Error().CustomError(400, "Must provide either accountId or communityId or both")
 }
 
 func (p *Post) CreatePost(request *PostCreateRequest) (*repo.Post, error) {
-
+	spew.Dump(request)
 	err := p.ValidateInput(request, []*validation.FieldRules{
-		validation.Field(&request.Record.Text, validation.Required),
-		validation.Field(&request.Record.Title, validation.Required),
-		validation.Field(&request.Record.CommunityId, validation.Required),
 		validation.Field(&request.AccountId, validation.Required),
 	})
 
@@ -97,6 +95,7 @@ func (p *Post) CreatePost(request *PostCreateRequest) (*repo.Post, error) {
 	}
 
 	modelRecord := request.Record.ConvertToPostModel()
+	modelRecord.PosterId = request.AccountId
 
 	createdRecord, isCreated := p.repo.Create(modelRecord)
 	if !isCreated {

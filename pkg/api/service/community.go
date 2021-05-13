@@ -43,6 +43,9 @@ func (c *Community) validateUpdate(com *repo.Community) error {
 }
 
 func (c *Community) GetById(id string) (*repo.Community, error) {
+	if id == "" {
+		return nil, c.er.UserInputError("id", "missing")
+	}
 	com := c.repo.FindById(id)
 	if com == nil || com.ID != id {
 		return nil, c.er.NotFoundResourceGeneric()
