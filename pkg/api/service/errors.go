@@ -19,6 +19,10 @@ func (e *serviceErrorTemplate) NotFoundResourceReason(reason string) error {
 	return fmt.Errorf("404,`%s` resource was not found. Check your query. Detailed reason => %s", e.model, reason)
 }
 
+func (e *serviceErrorTemplate) UnAuthorizedYouDoNotOwnThisResource() error {
+	return fmt.Errorf("401,The %s you're trying to modify is not yours", e.model)
+}
+
 // InternalError : 500 db error
 func (e *serviceErrorTemplate) InternalError() error {
 	return fmt.Errorf("500,Fatal internal error. This is due to the database or store . Please contact the website admin")
@@ -42,5 +46,5 @@ func (e *serviceErrorTemplate) UnAuthorized() error {
 
 // ImATeaPot : figure out where to throw this ?
 func (e *serviceErrorTemplate) ImATeaPot() error {
-	return fmt.Errorf("418, I'm a Teapot !!!")
+	return fmt.Errorf("418, i'm a teapot :)")
 }

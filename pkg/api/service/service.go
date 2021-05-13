@@ -36,6 +36,8 @@ type IService interface {
 	UpdateCommunity(id string, com *repo.Community) (*repo.Community, error)
 	// DeleteCommunity : Deletes the community and all the relavent posts for it
 	DeleteCommunity(id string) error
+
+	// posts
 }
 
 type Service struct {
