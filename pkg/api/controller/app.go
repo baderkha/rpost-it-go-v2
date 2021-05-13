@@ -9,6 +9,7 @@ import (
 type App struct {
 	Account   Account
 	Community Community
+	Post      Post
 }
 
 func New(db *gorm.DB) App {
@@ -19,6 +20,11 @@ func New(db *gorm.DB) App {
 		},
 		Community: Community{
 			service: &ser,
+		},
+		Post: Post{
+			Basecontroller: Basecontroller{
+				service: &ser,
+			},
 		},
 	}
 }

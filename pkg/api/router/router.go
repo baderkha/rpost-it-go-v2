@@ -25,4 +25,13 @@ func GenerateRotues(app *fiber.App, ctrlr controller.App) {
 		communityRouter.Patch("/:id", ctrlr.Community.Update)
 		communityRouter.Delete("/:id", ctrlr.Community.Delete)
 	}
+
+	postRouter := app.Group("posts")
+	{
+		postRouter.Get("", ctrlr.Post.GetAll)
+		postRouter.Get("/:id", ctrlr.Post.GetById)
+		postRouter.Post("", ctrlr.Post.Create)
+		postRouter.Patch("/:id", ctrlr.Post.Update)
+		postRouter.Delete("/:id", ctrlr.Post.Delete)
+	}
 }

@@ -38,11 +38,23 @@ type IService interface {
 	DeleteCommunity(id string) error
 
 	// posts
+
+	// GetPostById : fetch a specific post
+	GetPostById(id string) (*repo.Post, error)
+	// GetPosts : get many posts , by a bunch of filtering options
+	GetPosts(req *PostRequest) (*[]repo.Post, error)
+	// CreatePost : createa  new post for an account
+	CreatePost(request *PostCreateRequest) (*repo.Post, error)
+	// UpdatePost : Update a post by an account
+	UpdatePost(request *PostUpdateRequest) (*repo.Post, error)
+	// DeletePost : Delete a post by an account
+	DeletePost(req *PostDeleteRequest) error
 }
 
 type Service struct {
-	acc Account
-	com Community
+	acc  Account
+	com  Community
+	post Post
 }
 
 // new service instance
@@ -62,6 +74,14 @@ func New(db *gorm.DB) Service {
 			er: serviceErrorTemplate{
 				model: "Community",
 			},
+		},
+		post: Post{
+			BaseService: BaseService{
+				er: serviceErrorTemplate{
+					model: "Post",
+				},
+			},
+			repo: repo.NewMYSQLPostRepo(db),
 		},
 	}
 }
@@ -125,4 +145,33 @@ func (s *Service) UpdateCommunity(id string, com *repo.Community) (*repo.Communi
 // DeleteCommunity : Deletes the community and all the relavent posts for it
 func (s *Service) DeleteCommunity(id string) error {
 	return s.com.Delete(id)
+}
+
+// GetPostById : fetch a specific post
+func (s *Service) GetPostById(id string) (*repo.Post, error) {
+	return s.post.GetPostById(id)
+}
+
+// GetPosts : get many posts , by a bunch of filtering options
+func (s *Service) GetPosts(req *PostRequest) (*[]repo.Post, error) {
+	return s.post.GetPosts(req)
+}
+
+// CreatePost : createa  new post for an account
+func (s *Service) CreatePost(request *PostCreateRequest) (*repo.Post, error) {
+	_, err := s.com.GetById(request.Record.CommunityId)
+	if err != nil {
+		return nil, err
+	}
+	return s.post.CreatePost(request)
+}
+
+// UpdatePost : Update a post by an account
+func (s *Service) UpdatePost(request *PostUpdateRequest) (*repo.Post, error) {
+	return s.post.UpdatePost(request)
+}
+
+// DeletePost : Delete a post by an account
+func (s *Service) DeletePost(req *PostDeleteRequest) error {
+	return s.post.DeletePost(req)
 }

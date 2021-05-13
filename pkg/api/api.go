@@ -50,6 +50,7 @@ func Migrate() {
 	// migrate
 	db.AutoMigrate(repo.Account{})
 	db.AutoMigrate(repo.Community{})
+	db.AutoMigrate(repo.Post{})
 
 	// close connection once done
 	sqlDB, _ := db.DB()

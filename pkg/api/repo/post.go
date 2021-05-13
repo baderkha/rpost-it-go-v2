@@ -2,13 +2,11 @@ package repo
 
 // Post : entity that models a post in a community
 type Post struct {
-	ID                 string
-	Title              string
-	Text               string
-	PosterId           string
-	Poster             *AccountView `gorm:"foreignKey:PosterId"`
-	CommunityId        string
-	CommunityPostOwner Community `gorm:"foreignKey:CommunityId"`
+	ID          string
+	Title       string
+	Text        string
+	PosterId    string
+	CommunityId string
 }
 
 // IPostRepo : Contract that provides the calls a service can consume for the posts entity
