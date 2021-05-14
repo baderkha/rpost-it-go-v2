@@ -7,7 +7,9 @@ import (
 )
 
 func GenerateRotues(app *fiber.App, ctrlr controller.App) {
-
+	app.Get("", func(ctx *fiber.Ctx) {
+		ctx.Status(200).SendString("api works")
+	})
 	accountRouter := app.Group("accounts")
 	{
 		accountRouter.Get("", ctrlr.Account.Search)

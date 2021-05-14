@@ -4,7 +4,6 @@ install:
 start: start-db build-local 
 	./build/migration
 	GIN_MODE=test ./build/api
-	make stop-db
 dev :
 	echo "STARTING HOT RELOAD ENV"
 	find . -type f -name "*.go" | entr -r make start

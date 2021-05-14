@@ -6,7 +6,7 @@ services:
       - 3320:3306
     image: mysql:5.7
     volumes:
-      - ~/.rpost-it-db:/var/lib/mysql
+      - ./db:/var/lib/mysql
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root

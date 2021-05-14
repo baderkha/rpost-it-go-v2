@@ -8,7 +8,9 @@ import (
 	"rpost-it-go/pkg/api/router"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/middleware"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -24,7 +26,7 @@ func newDb() *gorm.DB {
 		},
 	)
 
-	dsn := "root:root@tcp(127.0.0.1:3320)/rpost-it?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "some:dumb@tcp(127.0.0.1:3320)/rpost-it?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: newLogger,
 	})
@@ -35,12 +37,15 @@ func newDb() *gorm.DB {
 }
 
 func Start() {
+	spew.Dump("here")
 	db := newDb()
 
 	app := fiber.New()
 
+	app.Use(middleware.Logger())
 	router.GenerateRotues(app, controller.New(db))
-	_ = app.Listen("8000")
+	err := app.Listen("4040")
+	spew.Dump(err)
 	sqlDB, _ := db.DB()
 	sqlDB.Close()
 }
@@ -48,9 +53,9 @@ func Start() {
 func Migrate() {
 	db := newDb()
 	// migrate
-	db.AutoMigrate(repo.Account{})
-	db.AutoMigrate(repo.Community{})
-	db.AutoMigrate(repo.Post{})
+	_ = db.AutoMigrate(repo.Account{})
+	_ = db.AutoMigrate(repo.Community{})
+	_ = db.AutoMigrate(repo.Post{})
 
 	// close connection once done
 	sqlDB, _ := db.DB()
