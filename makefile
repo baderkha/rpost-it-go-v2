@@ -1,9 +1,13 @@
 install:
+	brew install entr
 	go get ./...
 start: start-db build-local 
 	./build/migration
 	GIN_MODE=test ./build/api
 	make stop-db
+dev :
+	echo "STARTING HOT RELOAD ENV"
+	find . -type f -name "*.go" | entr -r make start
 stop-db:
 	docker-compose -f ./docker/local/docker-compose.yml down
 start-db:	

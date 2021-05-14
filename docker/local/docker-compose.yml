@@ -1,12 +1,12 @@
-version: "3.9"
+version: "3.3"
     
 services:
   db:
     ports:
-      - 3306:3306
+      - 3320:3306
     image: mysql:5.7
     volumes:
-      - ./db:/var/lib/mysql
+      - ~/.rpost-it-db:/var/lib/mysql
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root

@@ -24,7 +24,7 @@ func newDb() *gorm.DB {
 		},
 	)
 
-	dsn := "root:root@tcp(127.0.0.1:3306)/rpost-it?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "root:root@tcp(127.0.0.1:3320)/rpost-it?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: newLogger,
 	})
