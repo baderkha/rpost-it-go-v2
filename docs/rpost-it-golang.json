@@ -7,7 +7,6 @@
       "name": "Ahmad Baderkhan",
       "email": "ahmad@baderkhan.org"
     },
-    "summary": "Api for the postrealm.com website. ",
     "description": "This api includes all the actions that are permitted by a user for interacting programatically with postrealm website",
     "license": {
       "name": "MIT"
