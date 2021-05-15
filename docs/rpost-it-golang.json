@@ -1,0 +1,359 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "rpost-it-golang",
+    "version": "1.0",
+    "contact": {
+      "name": "Ahmad Baderkhan",
+      "email": "ahmad@baderkhan.org"
+    },
+    "summary": "Api for the postrealm.com website. ",
+    "description": "This api includes all the actions that are permitted by a user for interacting programatically with postrealm website",
+    "license": {
+      "name": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4040",
+      "description": "local"
+    },
+    {
+      "description": "live",
+      "url": "https://api.postrealm.com"
+    }
+  ],
+  "paths": {
+    "/accounts": {
+      "get": {
+        "summary": "Search For Account By specific filters",
+        "tags": [
+          "accounts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Accounts"
+                },
+                "examples": {
+                  "example-1": {}
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-accounts",
+        "description": "Search For Accounts by specific filters",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "search-term",
+            "description": "fuzzy search for an account , it can be the name ususally and it will try its best to fetch you accounts relative to your search result"
+          }
+        ]
+      },
+      "parameters": [],
+      "post": {
+        "summary": "Create an account from scratch",
+        "operationId": "post-accounts",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          }
+        },
+        "description": "create an a new postrealm account",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountCreate"
+              }
+            }
+          }
+        },
+        "tags": [
+          "accounts"
+        ]
+      }
+    },
+    "/accounts/{id}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "the id of the user you're looking for"
+        }
+      ],
+      "get": {
+        "summary": "Get an account by id",
+        "tags": [
+          "accounts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-accounts-id",
+        "description": "Gets a specific user / account by their id handle"
+      },
+      "patch": {
+        "summary": "Update account",
+        "operationId": "patch-accounts-id",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "description": "Update a specific account, with new information",
+        "tags": [
+          "accounts"
+        ]
+      },
+      "delete": {
+        "summary": "Delete an account",
+        "operationId": "delete-accounts-id",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerMessage"
+                }
+              }
+            }
+          }
+        },
+        "description": "Delete an account by a sepcific id , this will end up making a hard delete for everything related to that user",
+        "tags": [
+          "accounts"
+        ]
+      }
+    },
+    "/communities": {
+      "get": {
+        "summary": "search for communities",
+        "tags": [
+          "communities"
+        ],
+        "responses": {},
+        "operationId": "get-communities"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Accounts": {
+        "title": "Accounts",
+        "description": "Models Many Accounts",
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Account"
+        },
+        "x-examples": {
+          "example": [
+            {
+              "id": "u/cheeselover",
+              "email": "email@email.com",
+              "dateOfBirth": "26/12/1997"
+            }
+          ]
+        }
+      },
+      "Account": {
+        "title": "Account",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string"
+          }
+        },
+        "x-examples": {
+          "example-1": {
+            "id": "u/cheeselover",
+            "email": "email@email.com",
+            "dateOfBirth": "26/12/1997"
+          }
+        },
+        "description": "Models an account Object"
+      },
+      "ServerMessage": {
+        "title": "ServerMessage",
+        "type": "string",
+        "description": "Server Message when there's something wrong , or a big oopsie , or just status notification, this is usually meta data and not actual data"
+      },
+      "AccountCreate": {
+        "title": "AccountCreate",
+        "type": "object",
+        "x-examples": {
+          "example-1": {
+            "id": "u/cheeselover",
+            "password": "somePassword123",
+            "dateOfBirth": "26/12/1997",
+            "email": "someEmail@email.com"
+          }
+        },
+        "description": "Models an account create action , these are fields required when creating an account",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "password",
+          "dateOfBirth",
+          "email"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "Authorization": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Uses a JWT token to authenticate a client"
+      }
+    },
+    "responses": {}
+  }
+}

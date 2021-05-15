@@ -18,9 +18,9 @@ type Account struct {
 
 // AccountView : entity that can be passed back to the front end
 type AccountView struct {
-	ID          string
-	Email       string
-	DateOfBirth time.Time
+	ID          string    `json:"id"`
+	Email       string    `json:"email"`
+	DateOfBirth time.Time `json:"dateOfBirth"`
 }
 
 // use same table name as accounts

@@ -49,12 +49,26 @@ type IService interface {
 	UpdatePost(request *PostUpdateRequest) (*repo.Post, error)
 	// DeletePost : Delete a post by an account
 	DeletePost(req *PostDeleteRequest) error
+
+	// comments
+
+	// GetCommentById : Fetch a specific comment
+	GetCommentById(id string) (*repo.Comment, error)
+	// GetCommentsByPostId : get comments relavent to the post
+	GetCommentsByPostId(postId string) (*[]repo.Comment, error)
+	// CreateComment : Create a comment
+	CreateComment(cr *CreateCommentRequest) (*repo.Comment, error)
+	// UpdateComment : Update a comment
+	UpdateComment(ucr *UpdateCommentRequest) (*repo.Comment, error)
+	// DeleteComment : Delete a specific comment
+	DeleteComment(dcr *DeletecommentRequest) error
 }
 
 type Service struct {
-	acc  Account
-	com  Community
-	post Post
+	acc     Account
+	com     Community
+	comment Comment
+	post    Post
 }
 
 // new service instance
@@ -174,4 +188,33 @@ func (s *Service) UpdatePost(request *PostUpdateRequest) (*repo.Post, error) {
 // DeletePost : Delete a post by an account
 func (s *Service) DeletePost(req *PostDeleteRequest) error {
 	return s.post.DeletePost(req)
+}
+
+// GetCommentById : get a specific comment by id
+func (s *Service) GetCommentById(id string) (*repo.Comment, error) {
+	return s.comment.GetCommentById(id)
+}
+
+// GetCommentsByPostId : get comments relavent to the post
+func (s *Service) GetCommentsByPostId(postId string) (*[]repo.Comment, error) {
+	return s.comment.GetCommentsByPostId(postId)
+}
+
+// CreateComment : Create a comment
+func (s *Service) CreateComment(cr *CreateCommentRequest) (*repo.Comment, error) {
+	_, err := s.post.GetPostById(cr.PostId)
+	if err != nil {
+		return nil, err
+	}
+	return s.comment.CreateComment(cr)
+}
+
+// UpdateComment : Update a comment
+func (s *Service) UpdateComment(ucr *UpdateCommentRequest) (*repo.Comment, error) {
+	return s.comment.UpdateComment(ucr)
+}
+
+// DeleteComment : Delete a specific comment
+func (s *Service) DeleteComment(dcr *DeletecommentRequest) error {
+	return s.comment.DeleteComment(dcr)
 }
