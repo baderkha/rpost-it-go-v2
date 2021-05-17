@@ -10,16 +10,25 @@ import (
 	"unicode"
 
 	"github.com/badoux/checkmail"
+	validation "github.com/go-ozzo/ozzo-validation"
 )
 
 const (
 	PasswordMinLength = 8
 )
 
+// AccountLoginJSON : models a login request
+type AccountLoginJSON struct {
+	AccountId string `json:"accountId"`
+	Password  string `json:"password"`
+}
+
+// Account : Account Service
 type Account struct {
 	repo   repo.IAccountRepo
 	er     serviceErrorTemplate
 	hasher crypto.Hasher // password hasher
+	BaseService
 }
 
 // isValidPassword : does checks on what we consider a good password
@@ -85,6 +94,28 @@ func (a *Account) GetByIdFuzzy(id string) *[]repo.AccountView {
 	}
 	accounts := repo.Accounts(*results)
 	return accounts.GenerateView()
+}
+
+// Authenticate : Login to account and return status if logged in
+func (a *Account) Authenticate(req *AccountLoginJSON) (*repo.AccountView, error) {
+	err := a.ValidateInput(req, []*validation.FieldRules{
+		validation.Field(&req.AccountId, validation.Required),
+		validation.Field(&req.Password, validation.Required),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	requestedAccount := a.repo.FindById(req.AccountId)
+	if requestedAccount == nil || requestedAccount.ID != req.AccountId {
+		return nil, a.Error().UnAuthorized()
+	}
+
+	if !a.hasher.CompareHash(req.Password, requestedAccount.Password) {
+		return nil, a.Error().UnAuthorized()
+	}
+	return requestedAccount.GenerateView(), nil
+
 }
 
 func (a *Account) ValidateCreate(acc *repo.Account) error {

@@ -62,6 +62,15 @@ type IService interface {
 	UpdateComment(ucr *UpdateCommentRequest) (*repo.Comment, error)
 	// DeleteComment : Delete a specific comment
 	DeleteComment(dcr *DeletecommentRequest) error
+
+	// Session
+
+	// Login : login and authenticate the client via adding session
+	LoginSession(loginCreds *AccountLoginJSON) (*repo.Session, error)
+	// Logout : invalidates the stored session , so we forget that user
+	LogoutSession(sessionId string)
+	// VerifySession : verifies session
+	VerifySession(sessionId string) (*repo.Session, error)
 }
 
 type Service struct {
@@ -69,6 +78,7 @@ type Service struct {
 	com     Community
 	comment Comment
 	post    Post
+	session session
 }
 
 // new service instance
@@ -96,6 +106,22 @@ func New(db *gorm.DB) Service {
 				},
 			},
 			repo: repo.NewMYSQLPostRepo(db),
+		},
+		comment: Comment{
+			BaseService: BaseService{
+				er: serviceErrorTemplate{
+					model: "Comment",
+				},
+			},
+			repo: repo.NewMYSQLCommentRepo(db),
+		},
+		session: session{
+			repo: repo.NewMYSQLSessionRepo(db),
+			BaseService: BaseService{
+				er: serviceErrorTemplate{
+					model: "Session",
+				},
+			},
 		},
 	}
 }
@@ -217,4 +243,25 @@ func (s *Service) UpdateComment(ucr *UpdateCommentRequest) (*repo.Comment, error
 // DeleteComment : Delete a specific comment
 func (s *Service) DeleteComment(dcr *DeletecommentRequest) error {
 	return s.comment.DeleteComment(dcr)
+}
+
+// Login : login and authenticate the client via adding session
+func (s *Service) LoginSession(loginCreds *AccountLoginJSON) (*repo.Session, error) {
+	account, err := s.acc.Authenticate(loginCreds)
+	if err != nil {
+		return nil, err
+	}
+	ses, err := s.session.create(account.ID)
+	if err != nil {
+		return nil, err
+	}
+	return ses, nil
+}
+
+func (s *Service) LogoutSession(sessionId string) {
+	_ = s.session.delete(sessionId)
+}
+
+func (s *Service) VerifySession(sessionId string) (*repo.Session, error) {
+	return s.session.get(sessionId)
 }

@@ -10,6 +10,8 @@ type App struct {
 	Account   Account
 	Community Community
 	Post      Post
+	Comment   Comment
+	Auth      IAuth
 }
 
 func New(db *gorm.DB) App {
@@ -25,6 +27,18 @@ func New(db *gorm.DB) App {
 			Basecontroller: Basecontroller{
 				service: &ser,
 			},
+		},
+		Comment: Comment{
+			Basecontroller: Basecontroller{
+				service: &ser,
+			},
+		},
+		Auth: &SessionAuth{
+			Basecontroller: Basecontroller{
+				service: &ser,
+			},
+			DefaultAuthDurationDays: 7,
+			DomainPrefix:            "postrealm.com",
 		},
 	}
 }

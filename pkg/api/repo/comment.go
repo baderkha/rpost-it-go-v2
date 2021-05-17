@@ -13,7 +13,7 @@ type ICommentRepo interface {
 	// FindById : find a comment by a sepcific id
 	FindById(id string) *Comment
 	// FindPostsByAccountOwner : find comment by account owner
-	FindCommentsByAccountOwnerAndPost(accountId string, posterId string) *[]Post
+	FindCommentsByAccountOwnerAndPost(accountId string, posterId string) *[]Comment
 	// Get comments by post id
 	FindCommentsByPostId(postId string) *[]Comment
 	// Create : Creates a comment

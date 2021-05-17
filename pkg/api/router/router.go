@@ -7,9 +7,14 @@ import (
 )
 
 func GenerateRotues(app *fiber.App, ctrlr controller.App) {
+
 	app.Get("", func(ctx *fiber.Ctx) {
 		ctx.Status(200).SendString("api works")
 	})
+
+	app.Post("/login", ctrlr.Auth.Login)
+	app.Post("/logout", ctrlr.Auth.Logout)
+
 	accountRouter := app.Group("accounts")
 	{
 		accountRouter.Get("", ctrlr.Account.Search)
@@ -19,6 +24,7 @@ func GenerateRotues(app *fiber.App, ctrlr controller.App) {
 		accountRouter.Patch("/:id", ctrlr.Account.Update)
 		accountRouter.Delete("/:id", ctrlr.Account.Delete)
 	}
+
 	communityRouter := app.Group("communities")
 	{
 		communityRouter.Get("", ctrlr.Community.SearchCommunities)
@@ -32,8 +38,17 @@ func GenerateRotues(app *fiber.App, ctrlr controller.App) {
 	{
 		postRouter.Get("", ctrlr.Post.GetAll)
 		postRouter.Get("/:id", ctrlr.Post.GetById)
+		postRouter.Get("/:id/comments", ctrlr.Comment.GetAllCommentsForPostById)
+		postRouter.Post("/:id/comments", ctrlr.Comment.CreateComment)
 		postRouter.Post("", ctrlr.Post.Create)
 		postRouter.Patch("/:id", ctrlr.Post.Update)
 		postRouter.Delete("/:id", ctrlr.Post.Delete)
+	}
+
+	commentRouter := app.Group("comments")
+	{
+		commentRouter.Get("/:id", ctrlr.Comment.GetCommentId)
+		commentRouter.Patch("/:id", ctrlr.Comment.UpdateComment)
+		commentRouter.Delete("/:id", ctrlr.Comment.DeleteComment)
 	}
 }
