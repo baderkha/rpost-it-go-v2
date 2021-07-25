@@ -1,7 +1,7 @@
 package service
 
 import (
-	"rpost-it-go/pkg/api/repo"
+	"rpost-it-go/internal/api/repo"
 
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/jinzhu/copier"

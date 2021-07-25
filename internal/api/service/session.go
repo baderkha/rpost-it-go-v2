@@ -1,6 +1,6 @@
 package service
 
-import "rpost-it-go/pkg/api/repo"
+import "rpost-it-go/internal/api/repo"
 
 type session struct {
 	BaseService

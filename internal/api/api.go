@@ -3,9 +3,9 @@ package api
 import (
 	"log"
 	"os"
-	"rpost-it-go/pkg/api/controller"
-	"rpost-it-go/pkg/api/repo"
-	"rpost-it-go/pkg/api/router"
+	"rpost-it-go/internal/api/controller"
+	"rpost-it-go/internal/api/repo"
+	"rpost-it-go/internal/api/router"
 	"time"
 
 	"github.com/davecgh/go-spew/spew"

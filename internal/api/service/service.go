@@ -1,7 +1,7 @@
 package service
 
 import (
-	"rpost-it-go/pkg/api/repo"
+	"rpost-it-go/internal/api/repo"
 	"rpost-it-go/pkg/util/crypto"
 
 	"gorm.io/gorm"

@@ -1,7 +1,7 @@
 package service
 
 import (
-	"rpost-it-go/pkg/api/repo"
+	"rpost-it-go/internal/api/repo"
 	"rpost-it-go/pkg/util/regex"
 
 	"github.com/davecgh/go-spew/spew"

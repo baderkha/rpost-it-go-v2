@@ -2,8 +2,8 @@ package controller
 
 import (
 	"fmt"
-	"rpost-it-go/pkg/api/repo"
-	"rpost-it-go/pkg/api/service"
+	"rpost-it-go/internal/api/repo"
+	"rpost-it-go/internal/api/service"
 	"rpost-it-go/pkg/util/http"
 
 	"github.com/gofiber/fiber"

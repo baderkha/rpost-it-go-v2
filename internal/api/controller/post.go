@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"rpost-it-go/pkg/api/service"
+	"rpost-it-go/internal/api/service"
 
 	"github.com/gofiber/fiber"
 )

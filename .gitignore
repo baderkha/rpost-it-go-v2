@@ -1,2 +1,3 @@
 docker/local/db
 build
+*mock.go

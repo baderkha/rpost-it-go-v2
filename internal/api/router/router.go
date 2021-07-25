@@ -1,7 +1,7 @@
 package router
 
 import (
-	"rpost-it-go/pkg/api/controller"
+	"rpost-it-go/internal/api/controller"
 
 	"github.com/gofiber/fiber"
 )

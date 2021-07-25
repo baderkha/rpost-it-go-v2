@@ -3,7 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
-	"rpost-it-go/pkg/api/repo"
+	"rpost-it-go/internal/api/repo"
 	"rpost-it-go/pkg/util/crypto"
 	"strings"
 	"time"

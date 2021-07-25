@@ -1,7 +1,10 @@
 package main
 
-import "rpost-it-go/pkg/api"
+import (
+	"rpost-it-go/internal/api"
+)
 
 func main() {
 	api.Start()
+
 }
