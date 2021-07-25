@@ -17,5 +17,5 @@ type ICommunityRepo interface {
 	FindByAccountOwnerId(accountId string) *[]Community
 	Create(com *Community) (*Community, error)
 	Update(com *Community) (*Community, error)
-	Delete(id string) error
+	Delete(id string, accountId string) error
 }

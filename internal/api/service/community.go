@@ -90,8 +90,8 @@ func (c *Community) Update(id string, com *repo.Community) (*repo.Community, err
 	return com, nil
 }
 
-func (c *Community) Delete(id string) error {
-	err := c.repo.Delete(id)
+func (c *Community) Delete(id string, accountId string) error {
+	err := c.repo.Delete(id, accountId)
 	if err != nil {
 		return c.er.InternalError()
 	}

@@ -45,11 +45,13 @@ func (c *Community) GetByAccountId(ctx *fiber.Ctx) {
 
 func (c *Community) Create(ctx *fiber.Ctx) {
 	var com repo.Community
+
 	err := ctx.BodyParser(&com)
 	if err != nil {
 		ctx.Status(400).SendString(err.Error())
 		return
 	}
+	com.AccountOwnerId = getAccountId(ctx)
 	record, err := c.service.CreateCommunity(&com)
 	if err != nil {
 		ctx.Status(http.StatusFromError(err)).SendString(err.Error())
@@ -61,11 +63,13 @@ func (c *Community) Create(ctx *fiber.Ctx) {
 func (c *Community) Update(ctx *fiber.Ctx) {
 	var com repo.Community
 	id := ctx.Params("id")
+
 	err := ctx.BodyParser(&com)
 	if err != nil {
 		ctx.Status(400).SendString(err.Error())
 		return
 	}
+	com.AccountOwnerId = getAccountId(ctx)
 	record, err := c.service.UpdateCommunity(id, &com)
 	if err != nil {
 		ctx.Status(http.StatusFromError(err)).SendString(err.Error())
@@ -76,7 +80,7 @@ func (c *Community) Update(ctx *fiber.Ctx) {
 
 func (c *Community) Delete(ctx *fiber.Ctx) {
 	id := ctx.Params("id")
-	err := c.service.DeleteCommunity(id)
+	err := c.service.DeleteCommunity(id, getAccountId(ctx))
 	if err != nil {
 		ctx.Status(http.StatusFromError(err)).SendString(err.Error())
 		return

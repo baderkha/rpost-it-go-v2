@@ -35,7 +35,7 @@ type IService interface {
 	// UpdateCommunity : Updates the details in a community
 	UpdateCommunity(id string, com *repo.Community) (*repo.Community, error)
 	// DeleteCommunity : Deletes the community and all the relavent posts for it
-	DeleteCommunity(id string) error
+	DeleteCommunity(id string, accountId string) error
 
 	// posts
 
@@ -183,8 +183,8 @@ func (s *Service) UpdateCommunity(id string, com *repo.Community) (*repo.Communi
 }
 
 // DeleteCommunity : Deletes the community and all the relavent posts for it
-func (s *Service) DeleteCommunity(id string) error {
-	return s.com.Delete(id)
+func (s *Service) DeleteCommunity(id string, accountId string) error {
+	return s.com.Delete(id, accountId)
 }
 
 // GetPostById : fetch a specific post

@@ -32,7 +32,7 @@ func (c *Comment) GetCommentId(ctx *fiber.Ctx) {
 
 func (c *Comment) CreateComment(ctx *fiber.Ctx) {
 	var record service.CreateCommentJSON
-	accountId := ctx.Query("account-id")
+	accountId := getAccountId(ctx)
 	postId := ctx.Params("id")
 	err := ctx.BodyParser(&record)
 	if err != nil {
@@ -54,7 +54,7 @@ func (c *Comment) CreateComment(ctx *fiber.Ctx) {
 
 func (c *Comment) UpdateComment(ctx *fiber.Ctx) {
 	var record service.UpdateCommentJSON
-	accountId := ctx.Query("account-id")
+	accountId := getAccountId(ctx)
 	commentId := ctx.Query("comment-id")
 	err := ctx.BodyParser(&record)
 	if err != nil {
@@ -77,7 +77,7 @@ func (c *Comment) UpdateComment(ctx *fiber.Ctx) {
 func (c *Comment) DeleteComment(ctx *fiber.Ctx) {
 
 	err := c.Service().DeleteComment(&service.DeletecommentRequest{
-		AccountId: ctx.Query("account-id"),
+		AccountId: getAccountId(ctx),
 		CommentId: ctx.Params("id"),
 	})
 

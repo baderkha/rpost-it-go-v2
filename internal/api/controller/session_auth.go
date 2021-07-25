@@ -12,6 +12,7 @@ type SessionAuth struct {
 	Basecontroller
 	DefaultAuthDurationDays time.Duration
 	DomainPrefix            string
+	IsLocalHost             bool
 }
 
 func (s *SessionAuth) Login(ctx *fiber.Ctx) {
@@ -30,14 +31,17 @@ func (s *SessionAuth) Login(ctx *fiber.Ctx) {
 		s.StatusFromError(ctx, err)
 		return
 	}
-	ctx.Cookie(&fiber.Cookie{
+	cookie := &fiber.Cookie{
 		Name:     "session-token",
 		Value:    session.ID,
-		Secure:   true,
 		HTTPOnly: true,
-		Domain:   "." + s.DomainPrefix,
+		Secure:   !s.IsLocalHost,
 		Expires:  time.Now().Add(s.DefaultAuthDurationDays * 24 * time.Hour),
-	})
+	}
+
+	cookie.Domain = "." + s.DomainPrefix
+
+	ctx.Cookie(cookie)
 	s.OK(ctx, "login success")
 }
 

@@ -1,8 +1,10 @@
 package controller
 
 import (
+	"fmt"
 	"rpost-it-go/internal/api/service"
 
+	"github.com/gofiber/fiber"
 	"gorm.io/gorm"
 )
 
@@ -12,6 +14,15 @@ type App struct {
 	Post      Post
 	Comment   Comment
 	Auth      IAuth
+}
+
+func getAccountId(ctx *fiber.Ctx) string {
+	accountID := (ctx.Locals("request-account-id")).(string)
+	if accountID == "" {
+		fmt.Println("account id is empty even though route needed auth , put middle ware on or do something")
+		panic("should not happen !")
+	}
+	return accountID
 }
 
 func New(db *gorm.DB) App {
@@ -38,7 +49,8 @@ func New(db *gorm.DB) App {
 				service: &ser,
 			},
 			DefaultAuthDurationDays: 7,
-			DomainPrefix:            "postrealm.com",
+			DomainPrefix:            "local.dev.youvisit.com",
+			IsLocalHost:             true,
 		},
 	}
 }

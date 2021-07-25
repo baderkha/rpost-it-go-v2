@@ -14,8 +14,8 @@ func GenerateRotues(app *fiber.App, ctrlr controller.App) {
 
 	app.Post("/login", ctrlr.Auth.Login)
 	app.Post("/logout", ctrlr.Auth.Logout)
-
-	accountRouter := app.Group("accounts")
+	api := app.Group("/api", ctrlr.Auth.Verify)
+	accountRouter := api.Group("/accounts")
 	{
 		accountRouter.Get("", ctrlr.Account.Search)
 		accountRouter.Get("/:id", ctrlr.Account.GetById)
@@ -25,7 +25,7 @@ func GenerateRotues(app *fiber.App, ctrlr controller.App) {
 		accountRouter.Delete("/:id", ctrlr.Account.Delete)
 	}
 
-	communityRouter := app.Group("communities")
+	communityRouter := api.Group("/communities")
 	{
 		communityRouter.Get("", ctrlr.Community.SearchCommunities)
 		communityRouter.Get("/:id", ctrlr.Community.GetById)
@@ -34,7 +34,7 @@ func GenerateRotues(app *fiber.App, ctrlr controller.App) {
 		communityRouter.Delete("/:id", ctrlr.Community.Delete)
 	}
 
-	postRouter := app.Group("posts")
+	postRouter := api.Group("/posts")
 	{
 		postRouter.Get("", ctrlr.Post.GetAll)
 		postRouter.Get("/:id", ctrlr.Post.GetById)
@@ -45,7 +45,7 @@ func GenerateRotues(app *fiber.App, ctrlr controller.App) {
 		postRouter.Delete("/:id", ctrlr.Post.Delete)
 	}
 
-	commentRouter := app.Group("comments")
+	commentRouter := api.Group("/comments")
 	{
 		commentRouter.Get("/:id", ctrlr.Comment.GetCommentId)
 		commentRouter.Patch("/:id", ctrlr.Comment.UpdateComment)

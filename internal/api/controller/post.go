@@ -22,7 +22,7 @@ func (p *Post) GetById(ctx *fiber.Ctx) {
 
 func (p *Post) GetAll(ctx *fiber.Ctx) {
 	req := &service.PostRequest{
-		AccountId:   ctx.Query("account-id"),
+		AccountId:   getAccountId(ctx),
 		CommunityId: ctx.Query("community-id"),
 	}
 
@@ -44,7 +44,7 @@ func (p *Post) Create(ctx *fiber.Ctx) {
 	}
 
 	request := service.PostCreateRequest{
-		AccountId: ctx.Query("account-id"),
+		AccountId: getAccountId(ctx),
 		Record:    &record,
 	}
 
@@ -66,7 +66,7 @@ func (p *Post) Update(ctx *fiber.Ctx) {
 	}
 
 	request := &service.PostUpdateRequest{
-		AccountId: ctx.Query("account-id"),
+		AccountId: getAccountId(ctx),
 		PostId:    ctx.Params("id"),
 		Record:    &record,
 	}
@@ -81,7 +81,7 @@ func (p *Post) Update(ctx *fiber.Ctx) {
 func (p *Post) Delete(ctx *fiber.Ctx) {
 
 	request := &service.PostDeleteRequest{
-		AccountId: ctx.Query("account-id"),
+		AccountId: getAccountId(ctx),
 		PostId:    ctx.Params("id"),
 	}
 	err := p.Service().DeletePost(request)

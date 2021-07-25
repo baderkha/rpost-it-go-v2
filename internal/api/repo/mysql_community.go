@@ -43,6 +43,6 @@ func (mcomm *MYSQLCommunityRepo) Update(com *Community) (*Community, error) {
 	return com, err
 }
 
-func (mcomm *MYSQLCommunityRepo) Delete(id string) error {
-	return mcomm.db.Delete(&Community{}, "id=?", id).Error
+func (mcomm *MYSQLCommunityRepo) Delete(id string, accountId string) error {
+	return mcomm.db.Delete(&Community{}, "id=? & account_id=?", id, accountId).Error
 }
