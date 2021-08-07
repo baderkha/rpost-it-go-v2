@@ -11,9 +11,10 @@ type Account struct {
 	ID          string // short-handle-representation , username
 	Name        string `gorm:"type:VARCHAR(50)"`
 	LastName    string `gorm:"type:VARCHAR(50)"`
-	Email       string `gorm:"type:VARCHAR(255)"`
-	Password    string `gorm:"type:VARCHAR(50)"`
+	Email       string `gorm:"type:VARCHAR(100)"`
+	Password    string `gorm:"type:LONGTEXT"`
 	DateOfBirth time.Time
+	IsVerified  bool // if the account has been verified
 }
 
 // AccountView : entity that can be passed back to the front end

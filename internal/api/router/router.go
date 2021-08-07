@@ -27,6 +27,7 @@ func GenerateRotues(app *fiber.App, ctrlr controller.App) {
 		app.Get("/posts", ctrlr.Post.GetAll)
 		app.Get("/posts/:id", ctrlr.Post.GetById)
 		app.Get("/posts/:id/comments", ctrlr.Comment.GetAllCommentsForPostById)
+		app.Get("/verify/:id", ctrlr.Account.VerifyCreation)
 
 		app.Get("/comments/:id", ctrlr.Comment.GetCommentId)
 

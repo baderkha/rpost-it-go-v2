@@ -1,8 +1,11 @@
 package service
 
 import (
+	"rpost-it-go/internal/api/config"
 	"rpost-it-go/internal/api/repo"
 	"rpost-it-go/pkg/util/crypto"
+	"rpost-it-go/pkg/util/jwt"
+	"rpost-it-go/pkg/util/mail"
 
 	"gorm.io/gorm"
 )
@@ -21,6 +24,8 @@ type IService interface {
 	UpdateAccount(acc *repo.Account) (*repo.AccountView, error)
 	// DeleteAccount : Remove the account completely, this needs to account for removing all posts and comments
 	DeleteAccount(id string) error
+	// VerifyAccountCreation : verify account has been created from the email sent
+	VerifyAccountCreation(accountId string, jwtToken string) (status string, err error)
 
 	// Communities
 
@@ -94,6 +99,12 @@ func New(db *gorm.DB) Service {
 			hasher: &crypto.Bcrypt{
 				Rounds: 12,
 			},
+			mailer:     mail.New(config.Get().MailConfig.Region, config.Get().MailConfig.From),
+			hashSecret: config.Get().Auth.Verification.HashSecret,
+			jwtHasher: jwt.HS256{
+				Issuer: config.Get().Auth.Verification.Issuer,
+			},
+			verificationLink: config.Get().Auth.Verification.Link,
 		},
 		com: Community{
 			repo: repo.NewMYSQLCommunityRepo(db),
@@ -141,6 +152,9 @@ func (s *Service) GetAccountByApproximateId(idHandle string) *[]repo.AccountView
 // CreateAccount : create new account safley and do validations on the user input , todo add roles generations aswell
 func (s *Service) CreateAccount(acc *repo.Account) (*repo.AccountView, error) {
 	return s.acc.Create(acc)
+}
+func (s *Service) VerifyAccountCreation(accountId string, jwtToken string) (status string, err error) {
+	return s.acc.VerifyAccountCreation(accountId, jwtToken)
 }
 
 // UpdateAccount : update the account fields , via a patch

@@ -33,6 +33,7 @@ func (s *session) create(accountId string) (*repo.Session, error) {
 	if !isCreated {
 		return nil, s.Error().InternalError()
 	}
+	_ = s.repo.DeleteAllByAccountIdAndNotInID(accountId, session.ID) // delete all old lying around sessions just incase
 	return session, nil
 }
 

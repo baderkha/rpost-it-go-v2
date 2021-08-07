@@ -39,3 +39,12 @@ func (ms *MYSQLSession) Update(session *Session) (*Session, bool) {
 func (ms *MYSQLSession) Delete(id string) bool {
 	return ms.db.Unscoped().Model(&Session{}).Where("id=?", id).Delete(&Session{}).Error == nil
 }
+
+func (ms *MYSQLSession) DeleteAllByAccountIdAndNotInID(accountId string, idNotToDelete string) bool {
+	return ms.db.Unscoped().
+		Model(&Session{}).
+		Where("account_id=?", accountId).
+		Where("id!=?", idNotToDelete).
+		Delete(&Session{}).
+		Error == nil
+}

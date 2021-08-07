@@ -23,6 +23,18 @@ func (c *Account) GetById(ctx *fiber.Ctx) {
 	ctx.Status(200).JSON(record)
 }
 
+func (c *Account) VerifyCreation(ctx *fiber.Ctx) {
+	accountId := ctx.Params("id")
+	token := ctx.Query("token")
+
+	status, err := c.service.VerifyAccountCreation(accountId, token)
+	if err != nil {
+		ctx.Status(http.StatusFromError(err)).SendString(err.Error())
+		return
+	}
+	ctx.Status(200).SendString(status)
+}
+
 func (c *Account) Search(ctx *fiber.Ctx) {
 	searchTerm := ctx.Query("search-term")
 	if searchTerm == "" {

@@ -19,4 +19,6 @@ type ISession interface {
 	Update(session *Session) (*Session, bool)
 	// Delete : Delete the login session
 	Delete(id string) bool
+	// DeleteAllByAccountIdAndNotInID : Delete the sessions by account id
+	DeleteAllByAccountIdAndNotInID(accountId string, idNotToDelete string) bool
 }

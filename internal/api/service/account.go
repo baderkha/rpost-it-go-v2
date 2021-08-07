@@ -5,16 +5,21 @@ import (
 	"fmt"
 	"rpost-it-go/internal/api/repo"
 	"rpost-it-go/pkg/util/crypto"
+	"rpost-it-go/pkg/util/jwt"
+	"rpost-it-go/pkg/util/mail"
 	"strings"
 	"time"
 	"unicode"
 
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/badoux/checkmail"
 	validation "github.com/go-ozzo/ozzo-validation"
 )
 
 const (
-	PasswordMinLength = 8
+	PasswordMinLength            = 8
+	JWTVerificationExpiryMinutes = 5
+	DefaultVerificationMessage   = "Account Has Been Verified Thank you !"
 )
 
 // AccountLoginJSON : models a login request
@@ -29,6 +34,10 @@ type Account struct {
 	er     serviceErrorTemplate
 	hasher crypto.Hasher // password hasher
 	BaseService
+	mailer           mail.IMailer
+	hashSecret       string
+	jwtHasher        jwt.HS256
+	verificationLink string
 }
 
 // isValidPassword : does checks on what we consider a good password
@@ -56,13 +65,60 @@ next:
 
 }
 
+func (a *Account) sendEmailVerification(acc *repo.Account) bool {
+	token := a.getVerificationToken(acc)
+	link := a.verificationLink + "/" + acc.ID + "?token=" + token
+	// send verification email
+	return a.mailer.SendEmail(&mail.SendMailInput{
+		Subject: `Verify your Account Creation for post realm`,
+		To:      aws.StringSlice([]string{acc.Email}),
+		Body: fmt.Sprintf(`Hello %s ,
+		You are recieving this email in order to verify your account creation with postrealm please click on this link %s in order to verify . Do not share this link with anyone !`,
+			acc.ID,
+			link,
+		),
+	})
+}
+
+func (a *Account) VerifyAccountCreation(accountId string, token string) (status string, err error) {
+	if accountId == "" || token == "" {
+		return "", a.Error().UnAuthorized()
+	}
+
+	acc := a.repo.FindById(accountId)
+	if acc == nil || acc.ID != accountId {
+		return "", a.Error().UnAuthorized()
+	} else if acc.IsVerified {
+		return DefaultVerificationMessage, nil
+	}
+
+	isValid, claim := a.jwtHasher.ValidateWebToken(token, a.getSecret(acc))
+	if !isValid || claim.Subject != acc.ID {
+		return "", a.Error().UnAuthorized()
+	}
+	acc.IsVerified = true
+	_, _ = a.repo.Update(acc)
+	return DefaultVerificationMessage, nil
+
+}
+
+func (a *Account) getSecret(acc *repo.Account) string {
+	return fmt.Sprintf("%s:%s", a.hashSecret, acc.Password)
+}
+
+func (a *Account) getVerificationToken(acc *repo.Account) string {
+	secret := a.getSecret(acc)
+	token, _, _ := a.jwtHasher.GenerateWebToken(acc.ID, JWTVerificationExpiryMinutes, secret)
+	return token
+}
+
 func (a *Account) isValidDateOfBirth(date time.Time) error {
 	if date.Year() < 1900 {
-		return errors.New("How are you even alive ?")
+		return errors.New("how are you even alive ?")
 	} else if date.Year() > time.Now().Year() {
-		return errors.New("So you're from the future ?")
+		return errors.New("so you're from the future ?")
 	} else if time.Now().Year()-date.Year() < 13 {
-		return errors.New("You're too young to be on this website")
+		return errors.New("you're too young to be on this website")
 	}
 	return nil
 }
@@ -146,11 +202,17 @@ func (a *Account) Create(acc *repo.Account) (*repo.AccountView, error) {
 	}
 	// change password to hashed one
 	acc.Password = a.hasher.HashPassword(acc.Password)
+	acc.IsVerified = false
 
 	// create the user now
 	acc, err = a.repo.Create(acc)
 	if err != nil {
 		return nil, a.er.InternalError()
+	}
+
+	isSuccess := a.sendEmailVerification(acc)
+	if !isSuccess {
+		return nil, a.Error().CustomError(500, "Could not send the Verification email , we are having trouble . Try again later")
 	}
 
 	return acc.GenerateView(), nil

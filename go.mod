@@ -6,6 +6,7 @@ require (
 	github.com/aws/aws-sdk-go v1.40.17
 	github.com/badoux/checkmail v1.2.1
 	github.com/davecgh/go-spew v1.1.1
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/gofiber/fiber v1.14.6
 	github.com/gofiber/logger v0.2.4
