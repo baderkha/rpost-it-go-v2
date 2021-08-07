@@ -12,44 +12,58 @@ func GenerateRotues(app *fiber.App, ctrlr controller.App) {
 		ctx.Status(200).SendString("api works")
 	})
 
-	app.Post("/login", ctrlr.Auth.Login)
-	app.Post("/accounts", ctrlr.Account.Create)
-	app.Post("/logout", ctrlr.Auth.Logout)
-	api := app.Group("/api", ctrlr.Auth.Verify)
-
-	accountRouter := api.Group("/accounts")
+	// public routes
 	{
-		accountRouter.Get("", ctrlr.Account.Search)
-		accountRouter.Get("/:id", ctrlr.Account.GetById)
-		accountRouter.Get("/:id/communties", ctrlr.Community.GetByAccountId)
-		accountRouter.Patch("/:id", ctrlr.Account.Update)
-		accountRouter.Delete("/:id", ctrlr.Account.Delete)
+		app.Post("/login", ctrlr.Auth.Login)
+
+		app.Post("/accounts", ctrlr.Account.Create) // have verification ?
+		app.Get("/accounts", ctrlr.Account.Search)
+		app.Get("/accounts/:id/communties", ctrlr.Community.GetByAccountId)
+		app.Get("/accounts/:id", ctrlr.Account.GetById)
+
+		app.Get("/communities", ctrlr.Community.SearchCommunities)
+		app.Get("/communities/:id", ctrlr.Community.GetById)
+
+		app.Get("/posts", ctrlr.Post.GetAll)
+		app.Get("/posts/:id", ctrlr.Post.GetById)
+		app.Get("/posts/:id/comments", ctrlr.Comment.GetAllCommentsForPostById)
+
+		app.Get("/comments/:id", ctrlr.Comment.GetCommentId)
+
+		app.Post("/logout", ctrlr.Auth.Logout)
 	}
 
-	communityRouter := api.Group("/communities")
+	// private routes
 	{
-		communityRouter.Get("", ctrlr.Community.SearchCommunities)
-		communityRouter.Get("/:id", ctrlr.Community.GetById)
-		communityRouter.Post("", ctrlr.Community.Create)
-		communityRouter.Patch("/:id", ctrlr.Community.Update)
-		communityRouter.Delete("/:id", ctrlr.Community.Delete)
-	}
+		api := app.Group("/private", ctrlr.Auth.Verify)
 
-	postRouter := api.Group("/posts")
-	{
-		postRouter.Get("", ctrlr.Post.GetAll)
-		postRouter.Get("/:id", ctrlr.Post.GetById)
-		postRouter.Get("/:id/comments", ctrlr.Comment.GetAllCommentsForPostById)
-		postRouter.Post("/:id/comments", ctrlr.Comment.CreateComment)
-		postRouter.Post("", ctrlr.Post.Create)
-		postRouter.Patch("/:id", ctrlr.Post.Update)
-		postRouter.Delete("/:id", ctrlr.Post.Delete)
-	}
+		accountRouter := api.Group("/accounts")
+		{
+			accountRouter.Patch("/:id", ctrlr.Account.Update)
+			accountRouter.Delete("/:id", ctrlr.Account.Delete)
+		}
 
-	commentRouter := api.Group("/comments")
-	{
-		commentRouter.Get("/:id", ctrlr.Comment.GetCommentId)
-		commentRouter.Patch("/:id", ctrlr.Comment.UpdateComment)
-		commentRouter.Delete("/:id", ctrlr.Comment.DeleteComment)
+		communityRouter := api.Group("/communities")
+		{
+			communityRouter.Post("", ctrlr.Community.Create)
+			communityRouter.Patch("/:id", ctrlr.Community.Update)
+			communityRouter.Delete("/:id", ctrlr.Community.Delete)
+		}
+
+		postRouter := api.Group("/posts")
+		{
+
+			postRouter.Post("/:id/comments", ctrlr.Comment.CreateComment)
+			postRouter.Post("", ctrlr.Post.Create)
+			postRouter.Patch("/:id", ctrlr.Post.Update)
+			postRouter.Delete("/:id", ctrlr.Post.Delete)
+		}
+
+		commentRouter := api.Group("/comments")
+		{
+
+			commentRouter.Patch("/:id", ctrlr.Comment.UpdateComment)
+			commentRouter.Delete("/:id", ctrlr.Comment.DeleteComment)
+		}
 	}
 }
