@@ -3,6 +3,7 @@ package api
 import (
 	"log"
 	"os"
+	"rpost-it-go/internal/api/config"
 	"rpost-it-go/internal/api/controller"
 	"rpost-it-go/internal/api/repo"
 	"rpost-it-go/internal/api/router"
@@ -26,7 +27,7 @@ func newDb() *gorm.DB {
 		},
 	)
 
-	dsn := "some:dumb@tcp(127.0.0.1:3320)/rpost-it?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := config.Get().DBConfig.GetDSN()
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: newLogger,
 	})

@@ -3,7 +3,7 @@ module rpost-it-go
 go 1.15
 
 require (
-	github.com/aws/aws-sdk-go v1.40.17 // indirect
+	github.com/aws/aws-sdk-go v1.40.17
 	github.com/badoux/checkmail v1.2.1
 	github.com/davecgh/go-spew v1.1.1
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible

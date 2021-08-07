@@ -3,10 +3,10 @@ package repo
 // Post : entity that models a post in a community
 type Post struct {
 	ID          string
-	Title       string
+	Title       string `gorm:"type:VARCHAR(255)"`
 	Text        string
-	PosterId    string
-	CommunityId string
+	PosterId    string `gorm:"type:VARCHAR(50)"`
+	CommunityId string `gorm:"type:VARCHAR(50)"`
 }
 
 // IPostRepo : Contract that provides the calls a service can consume for the posts entity

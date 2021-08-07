@@ -3,11 +3,11 @@ package repo
 // Community : models a community
 type Community struct {
 	ID             string // short hand id for the community
-	Title          string
-	Description    string
-	AccountOwnerId string
-	About          string
-	AccountOwner   *AccountView `gorm:"foreignKey:AccountOwnerId"`
+	Title          string `gorm:"type:VARCHAR(50)"`
+	Description    string `gorm:"type:VARCHAR(255)"`
+	AccountOwnerId string `gorm:"type:VARCHAR(40)"`
+	About          string `gorm:"type:VARCHAR(50)"`
+	AccountOwner   *AccountView
 }
 
 // ICommunityRepo : Contract that ensures every repo must satisfy these transactions for Community entity

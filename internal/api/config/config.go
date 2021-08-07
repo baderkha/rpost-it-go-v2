@@ -19,7 +19,7 @@ type JSONEnvConfig struct {
 	DBConfig DBConfig `json:"dbConfig"`
 }
 
-func GetInstance() *JSONEnvConfig {
+func Get() *JSONEnvConfig {
 	if config == nil {
 		config = &JSONEnvConfig{}
 		err := json.ParseJsonFromFile(DefaultJSONPath, config)

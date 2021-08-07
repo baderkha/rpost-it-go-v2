@@ -1,9 +1,9 @@
 install:
 	brew install entr
 	go get ./...
-start: start-db build-local 
+start: build-local 
 	./build/migration
-	GIN_MODE=test ./build/api
+	AWS_REGION=us-east-1 GIN_MODE=test ./build/api
 dev :
 	echo "STARTING HOT RELOAD ENV"
 	find . -type f -name "*.go" | entr -r make start
@@ -14,5 +14,6 @@ start-db:
 build-local: build-folder
 	go build -o ./build/api ./cmd/api/main.go
 	go build -o ./build/migration ./cmd/migration/main.go
+	cp env.local.json ./build/env.json
 build-folder:
 	mkdir -p build

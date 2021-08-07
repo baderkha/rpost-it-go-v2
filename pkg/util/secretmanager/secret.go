@@ -1,12 +1,19 @@
 package secretmanager
 
 import (
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/secretsmanager"
 )
 
 // interface that implements a secret manager
-var secretManager ISecretManager
+var (
+	secretManager ISecretManager
+)
+
+const (
+	defaultAWSRegion = "us-east-1"
+)
 
 // ISecretManager : a safe place your server has access
 // to to bring you secrets like a keychain
@@ -21,7 +28,7 @@ type ISecretManager interface {
 func New() ISecretManager {
 	if secretManager == nil {
 		s := session.Must(session.NewSession())
-		sm := secretsmanager.New(s)
+		sm := secretsmanager.New(s, aws.NewConfig().WithRegion(defaultAWSRegion))
 		secretManager = &AwsSecretManager{
 			driver: sm,
 		}

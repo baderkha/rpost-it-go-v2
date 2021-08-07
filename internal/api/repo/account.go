@@ -9,10 +9,10 @@ import (
 // Account : entity that models a user
 type Account struct {
 	ID          string // short-handle-representation , username
-	Name        string
-	LastName    string
-	Email       string
-	Password    string
+	Name        string `gorm:"type:VARCHAR(50)"`
+	LastName    string `gorm:"type:VARCHAR(50)"`
+	Email       string `gorm:"type:VARCHAR(255)"`
+	Password    string `gorm:"type:VARCHAR(50)"`
 	DateOfBirth time.Time
 }
 

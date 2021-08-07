@@ -2,10 +2,10 @@ package repo
 
 // Comment : entity that models a comment
 type Comment struct {
-	ID             string
+	ID             string `gorm:"type:VARCHAR(50)"`
 	Text           string
-	AccountOwnerId string
-	PostId         string
+	AccountOwnerId string `gorm:"type:VARCHAR(50)"`
+	PostId         string `gorm:"type:VARCHAR(50)"`
 }
 
 // ICommentRepo : Comment repository that models the crud for a comment model , this is a contract
