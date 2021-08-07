@@ -71,6 +71,8 @@ type IService interface {
 	LogoutSession(sessionId string)
 	// VerifySession : verifies session
 	VerifySession(sessionId string) (*repo.Session, error)
+	// RefreshSession : Prolong a session for any reason
+	RefreshSession(session *repo.Session) (*repo.Session, error)
 }
 
 type Service struct {
@@ -175,6 +177,10 @@ func (s *Service) CreateCommunity(com *repo.Community) (*repo.Community, error) 
 		return nil, s.com.er.NotFoundResourceReason("The account you're trying to associate with this community does not exist")
 	}
 	return s.com.Create(com)
+}
+
+func (s *Service) RefreshSession(session *repo.Session) (*repo.Session, error) {
+	return s.session.refresh(session)
 }
 
 // UpdateCommunity : Updates the details in a community

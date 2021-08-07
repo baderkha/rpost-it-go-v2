@@ -44,6 +44,10 @@ func (e *serviceErrorTemplate) UnAuthorized() error {
 	return fmt.Errorf("401,The action on this resource `%s` is unauthorized for this request. Ensure you have the access privelage for this resource", e.model)
 }
 
+func (e *serviceErrorTemplate) ExpiredLogin() error {
+	return fmt.Errorf("440, The login is expired and user must sign in again ")
+}
+
 // ImATeaPot : figure out where to throw this ?
 func (e *serviceErrorTemplate) ImATeaPot() error {
 	return fmt.Errorf("418, i'm a teapot :)")

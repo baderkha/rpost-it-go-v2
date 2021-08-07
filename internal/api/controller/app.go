@@ -49,7 +49,7 @@ func New(db *gorm.DB) App {
 				service: &ser,
 			},
 			DefaultAuthDurationDays: 7,
-			DomainPrefix:            "local.dev.youvisit.com",
+			DomainPrefix:            "local.api.postrealm.com",
 			IsLocalHost:             true,
 		},
 	}

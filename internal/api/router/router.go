@@ -15,6 +15,7 @@ func GenerateRotues(app *fiber.App, ctrlr controller.App) {
 	app.Post("/login", ctrlr.Auth.Login)
 	app.Post("/logout", ctrlr.Auth.Logout)
 	api := app.Group("/api", ctrlr.Auth.Verify)
+
 	accountRouter := api.Group("/accounts")
 	{
 		accountRouter.Get("", ctrlr.Account.Search)

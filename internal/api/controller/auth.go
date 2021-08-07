@@ -10,7 +10,7 @@ type IAuth interface {
 	Login(ctx *fiber.Ctx)
 	// Logout of api
 	Logout(ctx *fiber.Ctx)
-	// Verify credentials via token , use this in your middleware it will and should pass back
+	// Verify credentials
 	// requested-account-id , which will bethe index of the account
 	Verify(ctx *fiber.Ctx)
 }
