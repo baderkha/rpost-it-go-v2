@@ -3,7 +3,7 @@ package controller
 import (
 	"rpost-it-go/internal/api/service"
 
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
 )
 
 type Post struct {

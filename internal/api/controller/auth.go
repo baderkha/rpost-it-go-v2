@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
 )
 
 // Abstraction for the auth controller , so we can make it portable if we want to switch to jwt

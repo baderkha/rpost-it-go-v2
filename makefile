@@ -11,9 +11,12 @@ stop-db:
 	docker-compose -f ./docker/local/docker-compose.yml down
 start-db:	
 	docker-compose -f ./docker/local/docker-compose.yml up -d
-build-local: build-folder
+copy-documentation:
+	cp ./docs/rpost-it-golang.json ./build/docs.json
+build-local: build-folder copy-documentation
 	go build -o ./build/api ./cmd/api/main.go
 	go build -o ./build/migration ./cmd/migration/main.go
 	cp env.local.json ./build/env.json
+	
 build-folder:
 	mkdir -p build

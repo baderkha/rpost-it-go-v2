@@ -6,7 +6,7 @@ import (
 	"rpost-it-go/internal/api/service"
 	"rpost-it-go/pkg/util/http"
 
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
 )
 
 type Community struct {

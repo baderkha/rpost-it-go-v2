@@ -5,7 +5,7 @@ import (
 	"rpost-it-go/internal/api/service"
 	"rpost-it-go/pkg/util/http"
 
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
 )
 
 // Basecontroller : Extend this controller to be able to get abstractions from fiber context

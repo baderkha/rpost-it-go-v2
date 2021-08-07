@@ -12,6 +12,7 @@ import (
 
 // IService : A facade to all the sub services
 type IService interface {
+
 	// Accounts
 
 	// GetAccountById : query for an account with a safe

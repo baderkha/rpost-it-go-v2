@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"rpost-it-go/internal/api/service"
 
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 

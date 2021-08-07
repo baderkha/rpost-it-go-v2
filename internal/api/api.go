@@ -10,8 +10,9 @@ import (
 	"time"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/gofiber/fiber"
-	"github.com/gofiber/fiber/middleware"
+
+	"github.com/gofiber/fiber/v2"
+	loggerFiber "github.com/gofiber/fiber/v2/middleware/logger"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -43,9 +44,10 @@ func Start() {
 
 	app := fiber.New()
 
-	app.Use(middleware.Logger())
 	router.GenerateRotues(app, controller.New(db))
-	err := app.Listen("4040")
+	app.Use(loggerFiber.New())
+	err := app.Listen(":4040")
+
 	spew.Dump(err)
 	sqlDB, _ := db.DB()
 	sqlDB.Close()
