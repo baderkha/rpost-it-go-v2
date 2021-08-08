@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"rpost-it-go/internal/api/config"
 	"rpost-it-go/internal/api/service"
 
 	"github.com/gofiber/fiber/v2"
@@ -49,8 +50,8 @@ func New(db *gorm.DB) App {
 				service: &ser,
 			},
 			DefaultAuthDurationDays: 7,
-			DomainPrefix:            "local.api.postrealm.com",
-			IsLocalHost:             true,
+			DomainPrefix:            config.Get().Auth.CookieDomainPrefix,
+			IsLocalHost:             config.Get().Port != "",
 		},
 	}
 }

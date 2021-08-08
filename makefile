@@ -2,8 +2,8 @@ install:
 	brew install entr
 	go get ./...
 start: build-local 
-	cd build && ./migration
-	cd build && AWS_REGION=us-east-1 GIN_MODE=test ./api
+	./build/migration
+	AWS_REGION=us-east-1 GIN_MODE=test ./build/api
 dev :
 	echo "STARTING HOT RELOAD ENV"
 	find . -type f -name "*.go" | entr -r make start
@@ -14,9 +14,13 @@ start-db:
 copy-documentation:
 	cp ./docs/rpost-it-golang.json ./build/docs.json
 build-local: build-folder copy-documentation
-	go build -o ./build/api ./cmd/api/main.go
+	go build -o ./build/api ./cmd/local/main.go
 	go build -o ./build/migration ./cmd/migration/main.go
 	cp env.local.json ./build/env.json
-	
+deploy: build-folder copy-documentation
+	GOOS=linux go build -o ./build/api ./cmd/lambda/main.go
+	GOOS=linux go build -o ./build/migration ./cmd/migration/main.go
+	cp env.json ./build/env.json
+	serverless deploy
 build-folder:
 	mkdir -p build

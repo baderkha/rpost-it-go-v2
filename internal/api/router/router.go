@@ -9,7 +9,7 @@ import (
 )
 
 func GenerateRotues(app *fiber.App, ctrlr controller.App) {
-	swaggerMiddleware := swagger.NewMiddleware("./docs.json", "/")
+	swaggerMiddleware := swagger.NewMiddleware("./build/docs.json", "/")
 
 	app = swaggerMiddleware.Register(app)
 	// public routes

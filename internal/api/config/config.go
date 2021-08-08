@@ -3,7 +3,7 @@ package config
 import "rpost-it-go/pkg/util/json"
 
 const (
-	DefaultJSONPath = "env.json"
+	DefaultJSONPath = "./build/env.json"
 )
 
 // pointer to save memory
