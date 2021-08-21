@@ -22,6 +22,8 @@ type SendMailInput struct {
 type IMailer interface {
 	// SendEmail : send email to client with a message , subject and body , this is raw unformatted
 	SendEmail(mailInput *SendMailInput) bool
+	// SendHTMLEmail : send email to client with a message , subject and html body , this is html formatted
+	SendHTMLEmail(mailInput *SendMailInput) bool
 }
 
 func New(region string, fromEmail string) IMailer {

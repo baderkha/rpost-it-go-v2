@@ -6,9 +6,9 @@ require (
 	github.com/Bowery/prompt v0.0.0-20190419144237-972d0ceb96f5 // indirect
 	github.com/Joker/jade v1.0.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
-	github.com/aws/aws-lambda-go v1.19.1 // indirect
+	github.com/aws/aws-lambda-go v1.19.1
 	github.com/aws/aws-sdk-go v1.40.17
-	github.com/awslabs/aws-lambda-go-api-proxy v0.11.0 // indirect
+	github.com/awslabs/aws-lambda-go-api-proxy v0.11.0
 	github.com/badoux/checkmail v1.2.1
 	github.com/davecgh/go-spew v1.1.1
 	github.com/dchest/safefile v0.0.0-20151022103144-855e8d98f185 // indirect
@@ -34,6 +34,7 @@ require (
 	github.com/mingrammer/commonregex v1.0.1
 	github.com/satori/go.uuid v1.2.0
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
+	golang.org/x/tools v0.0.0-20190617190820-da514acc4774
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 	gorm.io/driver/mysql v1.0.6
 	gorm.io/gorm v1.21.9

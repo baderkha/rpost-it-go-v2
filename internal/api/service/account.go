@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"rpost-it-go/internal/api/repo"
+	"rpost-it-go/internal/api/view"
 	"rpost-it-go/pkg/util/crypto"
 	"rpost-it-go/pkg/util/jwt"
 	"rpost-it-go/pkg/util/mail"
@@ -13,6 +14,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/badoux/checkmail"
+	"github.com/davecgh/go-spew/spew"
 	validation "github.com/go-ozzo/ozzo-validation"
 )
 
@@ -66,17 +68,26 @@ next:
 }
 
 func (a *Account) sendEmailVerification(acc *repo.Account) bool {
+
+	var accountVerifyView view.EmailVerificationView
+
 	token := a.getVerificationToken(acc)
 	link := a.verificationLink + "/" + acc.ID + "?token=" + token
+
+	accountVerifyView.Name = acc.ID
+	accountVerifyView.VerifyLink = link
+
 	// send verification email
-	return a.mailer.SendEmail(&mail.SendMailInput{
+	html, err := accountVerifyView.Render()
+	if err != nil {
+		spew.Dump(err)
+		return false
+	}
+
+	return a.mailer.SendHTMLEmail(&mail.SendMailInput{
 		Subject: `Verify your Account Creation for post realm`,
 		To:      aws.StringSlice([]string{acc.Email}),
-		Body: fmt.Sprintf(`Hello %s ,
-		You are recieving this email in order to verify your account creation with postrealm please click on this link %s in order to verify . Do not share this link with anyone !`,
-			acc.ID,
-			link,
-		),
+		Body:    html,
 	})
 }
 
@@ -170,6 +181,10 @@ func (a *Account) Authenticate(req *AccountLoginJSON) (*repo.AccountView, error)
 	if !a.hasher.CompareHash(req.Password, requestedAccount.Password) {
 		return nil, a.Error().UnAuthorized()
 	}
+
+	if !requestedAccount.IsVerified {
+		return nil, a.Error().LoginNotVerified()
+	}
 	return requestedAccount.GenerateView(), nil
 
 }
@@ -212,7 +227,7 @@ func (a *Account) Create(acc *repo.Account) (*repo.AccountView, error) {
 
 	isSuccess := a.sendEmailVerification(acc)
 	if !isSuccess {
-		return nil, a.Error().CustomError(500, "Could not send the Verification email , we are having trouble . Try again later")
+		return nil, a.Error().CustomError(500, "Could not send the Verification email , we are having trouble . Try again later. Detailed Reason ")
 	}
 
 	return acc.GenerateView(), nil

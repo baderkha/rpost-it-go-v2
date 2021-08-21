@@ -13,11 +13,13 @@ start-db:
 	docker-compose -f ./docker/local/docker-compose.yml up -d
 copy-documentation:
 	cp ./docs/rpost-it-golang.json ./build/docs.json
-build-local: build-folder copy-documentation
+copy-web :
+	cp -r ./web ./build
+build-local: build-folder copy-documentation copy-web
 	go build -o ./build/api ./cmd/local/main.go
 	go build -o ./build/migration ./cmd/migration/main.go
 	cp env.local.json ./build/env.json
-deploy: build-folder copy-documentation
+deploy: build-folder copy-documentation copy-web
 	GOOS=linux go build -o ./build/api ./cmd/lambda/main.go
 	GOOS=linux go build -o ./build/migration ./cmd/migration/main.go
 	cp env.json ./build/env.json

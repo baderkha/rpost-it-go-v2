@@ -48,6 +48,10 @@ func (e *serviceErrorTemplate) ExpiredLogin() error {
 	return fmt.Errorf("440, The login is expired and user must sign in again ")
 }
 
+func (e *serviceErrorTemplate) LoginNotVerified() error {
+	return fmt.Errorf("423, You cannot access this account untill it's verified")
+}
+
 // ImATeaPot : figure out where to throw this ?
 func (e *serviceErrorTemplate) ImATeaPot() error {
 	return fmt.Errorf("418, i'm a teapot :)")
